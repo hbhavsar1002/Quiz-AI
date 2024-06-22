@@ -1,3 +1,4 @@
+//npx drizzle-kit push:pg command is used to push the chnages we have done in the database schema
 import {
   timestamp,
   pgTable,
@@ -104,6 +105,7 @@ export const quizzes = pgTable("quizzes", {
 export const quizzesRelations = relations(quizzes, ({ many, one }) => ({
   questions: many(questions),
   user: one(users),
+  submissions: many(quizSubmissions)
 }));
 
 export const questions = pgTable("questions", {
@@ -133,3 +135,19 @@ export const answerRelations = relations(answers, ({ one }) => ({
     references: [questions.id],
   }),
 }));
+
+export const quizSubmissions = pgTable("quiz_submissions", {
+  id: serial("id").primaryKey(),
+  quizId: integer("quiz_id"),
+  score: integer("score"),
+});
+
+export const quizSubmissionsRelations = relations(
+  quizSubmissions,
+  ({ one, many }) => ({
+    quiz: one(quizzes, {
+      fields: [quizSubmissions.quizId],
+      references: [quizzes.id],
+    }),
+  })
+);

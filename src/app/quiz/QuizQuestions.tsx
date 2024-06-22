@@ -13,6 +13,8 @@ import {
   quizzes,
 } from "@/db/schema";
 
+import { saveSubmission } from "../actions/saveSubmissions";
+
 import { useRouter } from "next/navigation";
 
 type dbAnswer = InferSelectModel<typeof dbAnswers>;
@@ -76,6 +78,16 @@ export default function QuizQuestions(props: Props) {
     router.push("/dashboard");
   };
 
+  const handleSubmit = async () => {
+    console.log(currentQuestion, questions.length -1 )
+    try {
+      await saveSubmission({ score }, props.quiz.id);
+    } catch (e) {
+      console.log(e);
+    }
+    setSubmitted(true);
+  };
+
   const scorePercentage: number = Math.round((score / questions.length) * 100);
   const selectedAnswer: number | null | undefined = userAnswers.find(
     (item) => item.questionId === questions[currentQuestion].id
@@ -102,20 +114,6 @@ export default function QuizQuestions(props: Props) {
       />
     );
   }
-
-  console.log(
-    questions[currentQuestion].answers.findIndex(
-      (answer) => answer.id === selectedAnswer
-    ),
-
-    isCorrect,
-
-    questions[currentQuestion].answers.find(
-      (answer) => answer.id === selectedAnswer
-    )?.isCorrect,
-
-    selectedAnswer
-  );
 
   return (
     <div className="flex flex-col flex-1">
@@ -182,17 +180,23 @@ export default function QuizQuestions(props: Props) {
             )?.answerText || ""
           }
         />
-        <Button
-          onClick={handleNext}
-          size="lg"
-          variant="neo"
-        >
-          {!started
-            ? "Start"
-            : currentQuestion === questions.length - 1
-            ? "Submit"
-            : "Next"}
-        </Button>
+        {started && currentQuestion === questions.length - 1 ? (
+          <Button
+            onClick={handleSubmit}
+            size="lg"
+            variant="neo"
+          >
+            Submit
+          </Button>
+        ) : (
+          <Button
+            onClick={handleNext}
+            size="lg"
+            variant="neo"
+          >
+            {!started ? "Start" : "Next"}
+          </Button>
+        )}
       </footer>
     </div>
   );

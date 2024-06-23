@@ -22,6 +22,8 @@ export const users = pgTable("user", {
   email: text("email").notNull(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  stripeCustomerId: text("stripe_customer_id"),
+  subcribed: boolean("subscribed")
 });
 
 export const userRelations = relations(users, ({ many }) => ({
@@ -140,6 +142,7 @@ export const quizSubmissions = pgTable("quiz_submissions", {
   id: serial("id").primaryKey(),
   quizId: integer("quiz_id"),
   score: integer("score"),
+  createdAt: timestamp("created_at").defaultNow().notNull()
 });
 
 export const quizSubmissionsRelations = relations(

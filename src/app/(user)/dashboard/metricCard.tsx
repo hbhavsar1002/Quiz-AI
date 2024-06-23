@@ -1,3 +1,4 @@
+import { roundNumber } from '@/lib/utils'
 import React from 'react'
 
 type Props ={
@@ -8,9 +9,9 @@ type Props ={
 const MetricCard = (props: Props) => {
     const {value, label} = props
   return (
-    <div>
+    <div className='p-6 border rounded-md'>
         <p>{label}</p>
-        <p>{value}</p>
+        <p className='text-2xl font-bold mt-2'>{roundNumber(value)}</p>
     </div>
   )
 }

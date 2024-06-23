@@ -30,7 +30,9 @@ const ResultCard = (props: Props) => {
     "text-lg",
     "font-semibold",
     "my-4",
-    "bg-secondary"
+    "bg-secondary",
+    "w-full",
+    "sm:max-w-fit"
   )}>{text}</div>;
 };
 

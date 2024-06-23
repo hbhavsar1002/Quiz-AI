@@ -79,7 +79,7 @@ export default function QuizQuestions(props: Props) {
   };
 
   const handleSubmit = async () => {
-    console.log(currentQuestion, questions.length -1 )
+    console.log(currentQuestion, questions.length - 1);
     try {
       await saveSubmission({ score }, props.quiz.id);
     } catch (e) {
@@ -116,8 +116,8 @@ export default function QuizQuestions(props: Props) {
   }
 
   return (
-    <div className="flex flex-col flex-1">
-      <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
+    <div className="flex flex-col p-2">
+      <div className="position-sticky top-0 z-10 shadow-md w-full pb-2">
         <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
           <Button
             size="icon"
@@ -136,15 +136,17 @@ export default function QuizQuestions(props: Props) {
           </Button>
         </header>
       </div>
-      <main className="flex justify-center flex-1">
+      <main className="flex flex-col">
         {!started ? (
-          <h1 className="text-3xl font-bold"> World👋</h1>
+          <h1 className="text-xl sm:text-3xl font-bold text-center mb-[5rem]">
+            Welcome to your Quiz
+          </h1>
         ) : (
           <div>
-            <h2 className="text-3xl font-bold">
+            <h2 className="text-lg sm:text-xl font-bold mt-1">
               {questions[currentQuestion].questionText}
             </h2>
-            <div className="grid grid-cols-1 gap-6 mt-6">
+            <div className="flex flex-col gap-4  mt-6">
               {questions[currentQuestion].answers.map((answer) => {
                 const variant =
                   selectedAnswer == answer.id
@@ -153,25 +155,27 @@ export default function QuizQuestions(props: Props) {
                       : "neoDanger"
                     : "neoOutline";
                 return (
-                  <Button
-                    key={answer.id}
-                    disabled={!!selectedAnswer}
-                    variant={variant}
-                    size={"xl"}
-                    onClick={() =>
-                      handleAnswer(answer, questions[currentQuestion].id)
-                    }
-                    className="disabled:opacity-100"
-                  >
-                    <p className="whitespace-normal">{answer.answerText}</p>
-                  </Button>
+                  <div className="mb-2">
+                    <Button
+                      key={answer.id}
+                      disabled={!!selectedAnswer}
+                      variant={variant}
+                      size={"sm"}
+                      onClick={() =>
+                        handleAnswer(answer, questions[currentQuestion].id)
+                      }
+                      className="disabled:opacity-100"
+                    >
+                      <p className="whitespace-normal">{answer.answerText}</p>
+                    </Button>
+                  </div>
                 );
               })}
             </div>
           </div>
         )}
       </main>
-      <footer className="footer pb-9 px-6 relative mb-0">
+      <footer className="footer flex flex-col justify-center  text-center sm:items-center mt-10 p-1">
         <ResultCard
           isCorrect={isCorrect}
           correctAnswer={
@@ -193,6 +197,7 @@ export default function QuizQuestions(props: Props) {
             onClick={handleNext}
             size="lg"
             variant="neo"
+            className="font-bold"
           >
             {!started ? "Start" : "Next"}
           </Button>

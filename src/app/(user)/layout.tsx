@@ -1,9 +1,13 @@
-import React from 'react'
+import React from "react";
+import Header from "@/header";
 
- const UserPagesLayout = ({children}:{children: React.ReactNode}) => {
+const UserPagesLayout = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className='max-w-3xl mx-auto'>{children}</div>
-  )
-}
+    <>
+      <Header />
+      <div className="max-w-3xl mx-auto p-3">{children}</div>
+    </>
+  );
+};
 
-export default UserPagesLayout
+export default UserPagesLayout;

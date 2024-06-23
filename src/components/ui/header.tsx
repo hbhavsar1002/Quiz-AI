@@ -2,6 +2,8 @@ import { auth, signOut } from "@/auth";
 import { Button } from "./button";
 import Image from "next/image";
 import Link from "next/link";
+import logo from "../../app/favicon.ico";
+
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -35,7 +37,21 @@ const Header = async () => {
     <header>
       <nav className="px-4 py-2.5">
         <div className="flex flex-wrap justify-between items-center mx-auto max-w-screen-xl">
-          <h1 className="text-3xl font-bold">Quiz AI</h1>
+          <div>
+            <Link
+              href={"/"}
+              className="flex items-center justify-center gap-2"
+            >
+              <Image
+                src={logo}
+                alt={"logo"}
+                width={30}
+                height={20}
+              ></Image>
+
+              <h1 className="text-xl sm:text-2xl font-bold"> Quiz AI</h1>
+            </Link>
+          </div>
 
           <div>
             {session?.user ? (

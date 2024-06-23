@@ -1,10 +1,11 @@
 "use client";
-import { use, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import ProgressBar from "@/components/progressBar";
 import { ChevronLeft, X } from "lucide-react";
 import ResultCard from "./ResultCard";
 import QuizSubmission from "./QuizSubmission";
+import Link from "next/link";
 
 interface Answer {
   answerText: string;
@@ -67,9 +68,12 @@ export default function Home() {
   const [started, setStarted] = useState<boolean>(false);
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
   const [score, setScore] = useState<number>(0);
-  const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
-  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+  //const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
+  //const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [submiited, setSubmitted] = useState<boolean>(false);
+  const [userAnswers, setUserAnswers] = useState<
+    { questionId: number; answerId: number }[]
+  >([]);
 
   const handleNext = () => {
     //when the quiz is not started we use Start button to start the quiz and then below we set the state as started and return because once we start the quiz, the button name is change to Next and this function will perform action for Next button
@@ -85,20 +89,51 @@ export default function Home() {
       return;
     }
 
-    setSelectedAnswer(null);
-    setIsCorrect(null);
+    //setSelectedAnswer(null);
+    //setIsCorrect(null);
   };
 
   const handleAnser = (answer: Answer) => {
-    setSelectedAnswer(answer.id);
+    const newUserAnswersArr: typeof userAnswers = [
+      ...userAnswers,
+      {
+        questionId: currentQuestion,
+        answerId: answer.id,
+      },
+    ];
+    setUserAnswers(newUserAnswersArr);
+    //setSelectedAnswer(answer.id);
     const isCurrentCorrect = answer.isCorrect;
     if (isCurrentCorrect) {
       setScore(score + 1);
     }
-    setIsCorrect(isCurrentCorrect);
+    //setIsCorrect(isCurrentCorrect);
+  };
+
+  const handlePressPrev = () => {
+    if (currentQuestion !== 0) {
+      setCurrentQuestion((prevCurrentQuestion) => prevCurrentQuestion - 1);
+    }
+  };
+
+  const handleExit = () => {
+    window.location.href = "/quiz";
   };
 
   const scorePercentage: number = Math.round((score / questions.length) * 100);
+
+  const selectedAnswer: number | null | undefined = userAnswers.find(
+    (item) => item.questionId === currentQuestion
+  )?.answerId;
+
+  const isCorrect: boolean | null | undefined =
+    questions[currentQuestion].answers.findIndex(
+      (answer) => answer.id === selectedAnswer
+    ) !== -1
+      ? questions[currentQuestion].answers.find(
+          (answer) => answer.id === selectedAnswer
+        )?.isCorrect
+      : null;
 
   if (submiited) {
     return (
@@ -111,76 +146,100 @@ export default function Home() {
   }
 
   return (
-    <div className="flex flex-col flex-1">
-      <div className="position-sticky top-0 z-10 shadow-md py-4 w-full">
-        <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
-          <Button
-            size="icon"
-            variant="outline"
-          >
-            <ChevronLeft />
-          </Button>
-          <ProgressBar value={(currentQuestion / questions.length) * 100} />
-          <Button
-            size="icon"
-            variant="outline"
-          >
-            <X />
-          </Button>
-        </header>
-      </div>
-      <main className="flex justify-center flex-1">
-        {!started ? (
-          <h1 className="text-3xl font-bold"> World👋</h1>
-        ) : (
-          <div>
-            <h2 className="text-3xl font-bold">
-              {questions[currentQuestion].questionText}
-            </h2>
-            <div className="grid grid-cols-1 gap-6 mt-6">
-              {questions[currentQuestion].answers.map((answer) => {
-                const variant =
-                  selectedAnswer == answer.id
-                    ? answer.isCorrect
-                      ? "neoSuccess"
-                      : "neoDanger"
-                    : "neoOutline";
-                return (
-                  <Button
-                    key={answer.id}
-                    variant={variant}
-                    size={"xl"}
-                    onClick={() => handleAnser(answer)}
-                  >
-                    <p className="whitespace-normal">{answer.answerText}</p>
-                  </Button>
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </main>
-      <footer className="footer pb-9 px-6 relative mb-0">
-        <ResultCard
-          isCorrect={isCorrect}
-          correctAnswer={
-            questions[currentQuestion].answers.find(
-              (answer) => answer.isCorrect === true
-            )?.answerText
-          }
-        />
-        <Button
-          onClick={handleNext}
-          size="lg"
-          variant="neo"
+    <>
+      {!started && (
+        <Link
+          href={"/quiz/new"}
+          className="w-fit"
         >
-          {!started
-            ? "Start"
-            : currentQuestion === questions.length - 1
-            ? "Submit"
-            : "Next"}
-        </Button>
-      </footer>
-    </div>
+          <Button
+            type="submit"
+            variant="ghost"
+          >
+            New Quiz
+          </Button>
+        </Link>
+      )}
+
+      <div className="flex flex-col p-2">
+        <div className="position-sticky top-0 z-10 shadow-md w-full pb-2">
+          <header className="grid grid-cols-[auto,1fr,auto] grid-flow-col items-center justify-between py-2 gap-2">
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handlePressPrev}
+            >
+              <ChevronLeft />
+            </Button>
+            <ProgressBar value={(currentQuestion / questions.length) * 100} />
+            <Button
+              size="icon"
+              variant="outline"
+              onClick={handleExit}
+            >
+              <X />
+            </Button>
+          </header>
+        </div>
+        <main className="flex flex-col">
+          {!started ? (
+            <h1 className="text-xl sm:text-3xl font-bold text-center mb-[5rem]">
+              {" "}
+              Welcom to Sample Quiz
+            </h1>
+          ) : (
+            <div>
+              <h2 className="text-lg sm:text-xl font-bold mt-1">
+                {questions[currentQuestion].questionText}
+              </h2>
+              <div className="flex flex-col gap-4  mt-6">
+                {questions[currentQuestion].answers.map((answer) => {
+                  const variant =
+                    selectedAnswer == answer.id
+                      ? answer.isCorrect
+                        ? "neoSuccess"
+                        : "neoDanger"
+                      : "neoOutline";
+                  return (
+                    <div className="mb-2">
+                      <Button
+                        key={answer.id}
+                        variant={variant}
+                        size={"sm"}
+                        onClick={() => handleAnser(answer)}
+                      >
+                        <p className="whitespace-normal">{answer.answerText}</p>
+                      </Button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </main>
+        <footer className="footer flex flex-col justify-center  text-center sm:items-center mt-10 p-1">
+          <ResultCard
+            isCorrect={isCorrect}
+            correctAnswer={
+              questions[currentQuestion].answers.find(
+                (answer) => answer.isCorrect === true
+              )?.answerText
+            }
+          />
+          <Button
+            onClick={handleNext}
+            size="lg"
+            variant="neo"
+            className="font-bold"
+          >
+            {!started
+              ? "Start"
+              : currentQuestion === questions.length - 1
+              ? "Submit"
+              : "Next"}
+          </Button>
+        </footer>
+      </div>
+    </>
   );
 }

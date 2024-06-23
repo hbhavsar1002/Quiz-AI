@@ -1,5 +1,8 @@
 The project that uses AI to generate quizzes.
 
+## Screenshot
+![alt text](<webss.png>)
+
 ## Tech Stack 
 
 - Next-auth - Authentication
@@ -9,12 +12,8 @@ The project that uses AI to generate quizzes.
 - Drizzle - Orm
 - PostgreSQL - Database
 - Supabase - Database hosting
-- Stripe - Payments
-- Tanstack - Table
 - Typescript - Type Checking
 - Vercel - Deployment
-- Stripe - Payments
-- Zod - Schema Validation
 
 ## Getting Started
 
@@ -45,10 +44,6 @@ GOOGLE_CLIENT_ID=""
 GOOGLE_CLIENT_SECRET=""
 AUTH_SECRET=""
 DATABASE_URL=""
-NEXT_PUBLIC_PUBLISHABLE_KEY=""
-STRIPE_SECRET_KEY=""
-STRIPE_WEBHOOK_SECRET=""
-STRIPE_WEBHOOK_LOCAL_SERCRET=""
 ```
 
 ## Deploy on Vercel

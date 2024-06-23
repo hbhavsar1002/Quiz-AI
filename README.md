@@ -1,4 +1,4 @@
-The project that uses AI to generate quizzes.
+This project leverages AI to automatically generate quizzes based on input documents. By integrating advanced natural language processing and machine learning techniques, the system reads and analyzes the content of a provided document, extracting key information and generating relevant quiz questions. This automated process enhances learning and assessment by creating tailored quizzes that reflect the important points and concepts within the document.
 
 ## Screenshot
 ![alt text](<webss.png>)

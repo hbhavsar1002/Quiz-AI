@@ -5,6 +5,7 @@ The project that uses AI to generate quizzes.
 
 ## Tech Stack 
 
+- Next.js - Framework
 - Next-auth - Authentication
 - Shadcn ui - ui library
 - Open Al - AI Integration
